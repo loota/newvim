@@ -1,32 +1,48 @@
 LeoNerd at freenode #vim
 
-A base in C where it's fast. With some higher level wrappers for all the bits that don't matter as much
-I see no reason why a good ~80% of the features, the ones where performance matters less, can't be in $HLL of choice
+A base in C where it's fast. With some higher level wrappers for all the bits
+that don't matter as much I see no reason why a good ~80% of the features, the
+ones where performance matters less, can't be in $HLL of choice
 
 =Top level=
-A -proper- core, designed from the beginning to be $HLL-wrappable, should be easy to link a {Lua,Perl,Python,Ruby,...} VM around on top
-By designing the core -properly-, from the beginning, with $HLL support, the API to all the higher level languages should be stable enough, that values and concepts are easily passed from one language to another
+A -proper- core, designed from the beginning to be $HLL-wrappable, should be
+easy to link a {Lua,Perl,Python,Ruby,...} VM around on top By designing the core
+-properly-, from the beginning, with $HLL support, the API to all the higher
+level languages should be stable enough, that values and concepts are easily
+passed from one language to another
 
 I envision an editor where, you can write in your .vimrc such code as   
   :perl use Vimm; Vimm::register_function DoThingy => sub { some code here; } | :map <Alt-d> :call DoThingy()
-OR maybe it won't be :map. Because :map as a concept kinda sucks for this as map is just a stupid byte-queue rewrite of the input layer.
+OR maybe it won't be :map. Because :map as a concept kinda sucks for this as map
+is just a stupid byte-queue rewrite of the input layer.
   :bind Alt-d DoThingy 
   (where DoThingy was already registered by some $HLL plugin)
 
 =Input=
-The input layer of a base C-level implementation of a vim rewrite would start with a mode enumeration, and an array of {that many} tries of key bindings.
-The leaves of that trie would all be code handler pointers, to C functions or Perl closures or Python callables or whatever.
-So we'd start with: in normal mode, the "i" node points at a mode switch function that switches us to insert mode. So now we're in insert mode.
-The basic level of interaction with this trie is to "bind" handlers into it... Handlers built in whatever language, that get inserted into that trie, to handle the keypress.
-Some trie nodes can be subtries... E.g. the normal 'g' one has to wait on a second key.
+The input layer of a base C-level implementation of a vim rewrite would start
+with a mode enumeration, and an array of {that many} tries of key bindings.  The
+leaves of that trie would all be code handler pointers, to C functions or Perl
+closures or Python callables or whatever.  So we'd start with: in normal mode,
+the "i" node points at a mode switch function that switches us to
+insert mode. So now we're in insert mode.  The basic level of
+interaction with this trie is to "bind" handlers into it... Handlers
+built in whatever language, that get inserted into that trie, to handle
+the keypress.  Some trie nodes can be subtries... E.g. the normal 'g'
+one has to wait on a second key.
 
-So all this part of logic can be done in the basic C code, because it has to be fast but it's boring...
-Then we get certain new kinds of handler (again at the C level), that, say, wait on the user to enter a single motion.
-So e.g. normal 'd' is bound to a (wait on a motion andthen) => call this C function that deletes the region
-That motion-waiting functional invokes the handler function you gave it, passing in a region in the buffer, which it measured.
-Also we can bind these sorts of things in visual mode... to pass in the already-selected region.
-With a proper decent base system, rebuilding large amounts of vi and then vim functionallity is not -actually- that hard.
+So all this part of logic can be done in the basic C code, because it has to be
+fast but it's boring...  Then we get certain new kinds of handler (again at the
+        C level), that, say, wait on the user to enter a single motion.  So e.g.
+normal 'd' is bound to a (wait on a motion andthen) => call this C function that
+deletes the region That motion-waiting functional invokes the handler function
+you gave it, passing in a region in the buffer, which it measured.  Also we can
+bind these sorts of things in visual mode... to pass in the already-selected
+region.  With a proper decent base system, rebuilding large amounts of vi and
+then vim functionallity is not -actually- that hard.
 
-e.g I just decided now that actually these tables need to inherit,
-because there needs to be a trie to handle just movements; so e.g. the "input a movement and then run this function" functional has access to a simple trie of all the movement commands.
-But the movement commands are a -subset- of the normal-mode commands, so the normal-mode trie can just inherit from them as a "base class" arrangement..
+e.g I just decided now that actually these tables need to inherit, because there
+needs to be a trie to handle just movements; so e.g. the "input a movement and
+then run this function" functional has access to a simple trie of all the
+movement commands.  But the movement commands are a -subset- of the normal-mode
+commands, so the normal-mode trie can just inherit from them as a "base class"
+arrangement..
