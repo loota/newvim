@@ -1,10 +1,12 @@
 LeoNerd at freenode #vim
 
+
 A base in C where it's fast. With some higher level wrappers for all the bits
 that don't matter as much I see no reason why a good ~80% of the features, the
 ones where performance matters less, can't be in $HLL of choice
 
-=Top level=
+Top level
+---------
 A -proper- core, designed from the beginning to be $HLL-wrappable, should be
 easy to link a {Lua,Perl,Python,Ruby,...} VM around on top By designing the core
 -properly-, from the beginning, with $HLL support, the API to all the higher
@@ -18,7 +20,8 @@ is just a stupid byte-queue rewrite of the input layer.
   :bind Alt-d DoThingy 
   (where DoThingy was already registered by some $HLL plugin)
 
-=Input=
+Input
+-----
 The input layer of a base C-level implementation of a vim rewrite would start
 with a mode enumeration, and an array of {that many} tries of key bindings.  The
 leaves of that trie would all be code handler pointers, to C functions or Perl
