@@ -1,4 +1,4 @@
-LeoNerd at freenode #vim
+LeoNerd in #vim-mutiny (freenode)
 
 
 A base in C where it's fast. With some higher level wrappers for all the bits
