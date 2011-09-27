@@ -1,0 +1,5 @@
+Development is too slow due to too few contributors
+Architecture mistakes cripple the scripting API
+Vim is good enough
+Performance
+Small and not very significant but annoying bugs
