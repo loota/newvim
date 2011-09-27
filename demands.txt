@@ -1,0 +1,5 @@
+- Background processes
+- Alt key, and all other keys, will play well with each other
+- Active development community
+- Good scripting language API for add-ons
+- Possible to add the editor to IDEs like Eclipse or KDevelop
