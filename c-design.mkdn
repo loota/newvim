@@ -35,7 +35,7 @@ one has to wait on a second key.
 
 So all this part of logic can be done in the basic C code, because it has to be
 fast but it's boring...  Then we get certain new kinds of handler (again at the
-        C level), that, say, wait on the user to enter a single motion.  So e.g.
+C level), that, say, wait on the user to enter a single motion.  So e.g.
 normal 'd' is bound to a (wait on a motion andthen) => call this C function that
 deletes the region That motion-waiting functional invokes the handler function
 you gave it, passing in a region in the buffer, which it measured.  Also we can
