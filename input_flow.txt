@@ -1,5 +1,15 @@
 Core
-    def handleInput()
+    handleInput()
+      if command in binder.promptCommands
+          pendPrompt()
+          return
+
+      if pendingPrompt
+          if inputIsEnter
+              binder.handle()
+          else
+              return
+
       if pendingMotion
               if inputIsMotion
                   binder.handle()
@@ -13,40 +23,48 @@ Core
               binder.handle()
 
 Binder
-    def handle()
-        if boundCommandFound
+    handle()
+        if bindingFound
+             if !range
+                 range = cursorPosition
              sendToHandler()
 
 Handler
-    def delete(range)
+    delete(range)
         remove(range)
         moveCursorTo(range.start)
 
-    def search(pattern)
+    search(pattern)
         prompt(pattern)
         match = getNextMatch(pattern)
         addToSearchHistory(pattern)
         moveCursorTo(match)
         highlightAll(pattern)
 
-    def searchFromBeginning()
+    searchFromBeginning()
         moveCursorTo(startOfFile)
         search(pattern)
 
 Commands
-   def remove(range)
+   remove(range)
        foreach position in range
            unset(buffer[position])
 
-   def getNextMatch(pattern)
+   getNextMatch(pattern)
        return regexMatch(buffer, pattern)
 
-   def addToSearchHistory(pattern)
+   addToSearchHistory(pattern)
        addToSearchHistory(pattern)
 
-   def moveCursorTo(range)
+   moveCursorTo(range)
        cursorPosition = range.start    
 
-   def highlightAll(pattern)
+   highlightAll(pattern)
         while match = getNextMatch and notEndOfFile
             highlight(match)
+
+
+
+bind(('x', 'delete')
+bindPrompt('g/', 'searchFromBeginning')
+bindOperator('\\', 'delete')
