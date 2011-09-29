@@ -1,0 +1,52 @@
+Core
+    def handleInput()
+      if pendingMotion
+              if inputIsMotion
+                  binder.handle()
+                  return
+              else
+                  pendMotion()
+      else
+          if inputIsOperator
+              pendMotion()
+          else
+              binder.handle()
+
+Binder
+    def handle()
+        if boundCommandFound
+             sendToHandler()
+
+Handler
+    def delete(range)
+        remove(range)
+        moveCursorTo(range.start)
+
+    def search(pattern)
+        prompt(pattern)
+        match = getNextMatch(pattern)
+        addToSearchHistory(pattern)
+        moveCursorTo(match)
+        highlightAll(pattern)
+
+    def searchFromBeginning()
+        moveCursorTo(startOfFile)
+        search(pattern)
+
+Commands
+   def remove(range)
+       foreach position in range
+           unset(buffer[position])
+
+   def getNextMatch(pattern)
+       return regexMatch(buffer, pattern)
+
+   def addToSearchHistory(pattern)
+       addToSearchHistory(pattern)
+
+   def moveCursorTo(range)
+       cursorPosition = range.start    
+
+   def highlightAll(pattern)
+        while match = getNextMatch and notEndOfFile
+            highlight(match)
